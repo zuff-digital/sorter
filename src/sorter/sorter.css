@@ -1,0 +1,91 @@
+body {
+    background-color: rgb(7, 29, 29);
+    color: white;
+}
+
+.barContainer {
+    display: flex;
+    height: calc(70vh - 20px);
+    justify-content: center;
+    align-items: flex-end;
+}
+
+.bar {
+    width: 5px;
+    /* height: 300px; */
+    margin: 1.5px;
+    background-color: rgb(246, 246, 170);
+}   
+
+.buttonContainer {
+    display: flex;
+    margin: 15px;
+    justify-content: space-around;
+    align-items: center;
+}
+
+.sortInputContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+input[type="radio"] {
+    appearance: none;
+}
+
+input[type="radio"]:checked  + label {
+    background-color: rgb(246, 246, 170);
+    opacity: .9;
+    color: rgb(7, 29, 29);
+}
+
+label {
+    font-size: 14px;
+}
+
+button, .sortInputContainer label {
+    color: rgb(246, 246, 170);
+    background-color: transparent;
+    border: solid 1px rgb(246, 246, 170);
+    border-radius: 10px;
+    padding: 5px;
+    margin: 5px;
+}
+
+button:focus {
+    outline: none;
+}
+
+
+/* SLIDER BASICS FOUND HERE: https://www.w3schools.com/howto/howto_js_rangeslider.asp */
+
+#barSlider {
+    -webkit-appearance: none;
+    appearance: none;
+    outline: none;
+    height: 3px;
+    background:rgb(246, 246, 170);
+    opacity: .85;
+    transition: opacity .2s;
+}
+
+#barSlider::-webkit-slider-thumb {
+    -webkit-appearance: none; /* Override default look */
+    appearance: none;
+    width: 13px; /* Set a specific slider handle width */
+    height: 13px; /* Slider handle height */
+    background: rgb(7, 29, 29); /* Green background */
+    border: 1px solid rgb(246, 246, 170);
+    border-radius: 50%;
+    cursor: pointer; /* Cursor on hover */
+}
+  
+#barSlider::-moz-range-thumb {
+    width: 13px; /* Set a specific slider handle width */
+    height: 13px; /* Slider handle height */
+    background: rgb(7, 29, 29); /* Green background */
+    border: 1px solid rgb(246, 246, 170);
+    border-radius: 50%;
+    cursor: pointer; /* Cursor on hover */
+}
