@@ -7,6 +7,8 @@ export function createQuickSortAnimations(array) {
 
     const animations = [];
 
+    console.log('LENGTH OF INPUT ARRAY: ', array.length);
+
     // The initial call to quicksort.
     quicksort(array, 0, array.length - 1, animations)
 
@@ -33,17 +35,21 @@ function partition(array, startIndex, endIndex, animations) {
 
     for (let i = startIndex; i < endIndex; i++) {
         if (array[i] <= pivot) {
-            // Push two copies of the indices that need swapping
-            // to convert and then revert the colors.
+            // Push the indices that need swapping 
+            // to the animations array.
             animations.push([partitionIndex, i]);
-            animations.push([partitionIndex, i]);
+            let temp = array[partitionIndex];
+            array[partitionIndex] = array[i];
+            array[i] = temp;
             partitionIndex++;
         }
     }
     // Once the loop ends, all that's left is to swap
     // the pivot value with the value at the partition index.
     animations.push([partitionIndex, endIndex]);
-    animations.push([partitionIndex, endIndex]);
+    array[endIndex] = array[partitionIndex];
+    array[partitionIndex] = pivot;
+
 
     // animations.push(`partition index is ${partitionIndex}`);
 
@@ -60,62 +66,61 @@ function partition(array, startIndex, endIndex, animations) {
 
 // Note: unlike in mergesort, there is no creation of an auxiliary array.
 // All of the partition logic operates on the input array itself.
-// function quicksort(array, startIndex, endIndex) {
-//     // Base case: the start and end index are the same (subarray of length 1)
-//     // or the start and end index create an invalid subarray (0, -1, for instance).
+function quicksortLocal(array, startIndex, endIndex) {
+    // Base case: the start and end index are the same (subarray of length 1)
+    // or the start and end index create an invalid subarray (0, -1, for instance).
 
-//     // This condition covers the recursive case.
-//     if (startIndex < endIndex) {
-//         // Call the partition function, which will return the new partition index.
-//         const partitionIndex = partition(array, startIndex, endIndex);
-//         // Make recursive calls to quicksort on the left and right subarrays.
-//         quicksort(array, startIndex, partitionIndex - 1);
-//         quicksort(array, partitionIndex + 1, endIndex);
-//     }
-//     // This return statement covers the base case.
-//     return;
-// }
+    // This condition covers the recursive case.
+    if (startIndex < endIndex) {
+        // Call the partition function, which will return the new partition index.
+        const partitionIndex = partitionLocal(array, startIndex, endIndex);
+        // Make recursive calls to quicksort on the left and right subarrays.
+        quicksortLocal(array, startIndex, partitionIndex - 1);
+        quicksortLocal(array, partitionIndex + 1, endIndex);
+    }
+    // This return statement covers the base case.
+    return;
+}
 
-// // The partition function takes in the start and end indices of an array,
-// // as well as a pivot element in that array around which it will organize its
-// // sorting logic. After carrying out the sorting logic, it returns an updated
-// // partition index.
-// function partition(array, startIndex, endIndex) {
-//     // Make the last element the pivot.
-//     const pivot = array[endIndex];
+// The partition function takes in the start and end indices of an array,
+// as well as a pivot element in that array around which it will organize its
+// sorting logic. After carrying out the sorting logic, it returns an updated
+// partition index.
+function partitionLocal(array, startIndex, endIndex) {
+    // Make the last element the pivot.
+    const pivot = array[endIndex];
 
-//     // Make the first element the partition index;
-//     let partitionIndex = startIndex;
+    // Make the first element the partition index;
+    let partitionIndex = startIndex;
 
-//     // Iterate over the array. If the value at index i is greater than
-//     // the pivot, swap that value with the value at partitionIndex, and increment
-//     // the partitionIndex by one.
-//     for (let i = startIndex; i < endIndex; i++) {
-//         if (array[i] <= pivot) {
-//             // Swapping the values of the partition index and the current index
-//             // in the event that the current index has a lower value than the pivot.
-//             let temp = array[partitionIndex];
-//             array[partitionIndex] = array[i];
-//             array[i] = temp;
-//             partitionIndex++;
-//         }
-//     }
+    // Iterate over the array. If the value at index i is greater than
+    // the pivot, swap that value with the value at partitionIndex, and increment
+    // the partitionIndex by one.
+    for (let i = startIndex; i < endIndex; i++) {
+        if (array[i] <= pivot) {
+            // Swapping the values of the partition index and the current index
+            // in the event that the current index has a lower value than the pivot.
+            let temp = array[partitionIndex];
+            array[partitionIndex] = array[i];
+            array[i] = temp;
+            partitionIndex++;
+        }
+    }
 
-//     // Finally, swap the pivot value with the value at the partition index.
-//     array[endIndex] = array[partitionIndex];
-//     array[partitionIndex] = pivot;
+    // Finally, swap the pivot value with the value at the partition index.
+    array[endIndex] = array[partitionIndex];
+    array[partitionIndex] = pivot;
 
-//     // Return the partition index.
-//     return partitionIndex;
-// }
+    // Return the partition index.
+    return partitionIndex;
+}
 
 // TESTING
 
-// let array1 = [7,2,1,4]
-// let array2 = [1,2,3,4,1,5,4,4,1,2,3,13,11,10]
-
-// // quicksort(array2, 0, array2.length - 1);
-
-// let res = createQuickSortAnimations(array2);
-
-// console.log(res);
+let array1 = [7,2,1,4]
+let array2 = [121, 88, 124, 49, 217];
+let array3 = array2.slice();
+const animations = [];
+quicksort(array2, 0, array2.length - 1, animations);
+quicksortLocal(array3, 0, array3.length - 1);
+// console.log(array2);

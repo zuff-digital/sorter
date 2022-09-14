@@ -5,7 +5,7 @@ import './sorter.css';
 
 const DEFAULT_BAR_COLOR = 'rgb(246, 246, 170)';
 const SECOND_BAR_COLOR = '#0060dd';
-const SORTING_SPEED = 1000;
+const SORTING_SPEED = 50;
 
 
 function Sorter() {
@@ -44,21 +44,19 @@ function Sorter() {
     }
 
     function handleSort() {
-        // Generate a new array.
-        handleCreate();
-
-        // Then, sort according to whichever algorithm is selected.
+        // Sort according to whichever algorithm is selected.
         if (algorithm === 'mergesort') {
             setCurrentlySorting(true);
             handleMergeSort();
-        }
-        if (algorithm === 'quicksort') {
+        } else if (algorithm === 'quicksort') {
             setCurrentlySorting(true);
             handleQuickSort();
-        }
-        if (algorithm === 'bubblesort') {
+        } else if (algorithm === 'bubblesort') {
             setCurrentlySorting(true);
             handleBubbleSort()
+        } else {
+            // Generate a new array.
+            handleCreate();
         }
     }
     // Update the number of bars based on user input.
@@ -81,10 +79,12 @@ function Sorter() {
         // (the first to change color, the second to revert color) and k represents the index in the main array
         // meant to be replaced by valueAt[i or j].       
 
+        // Access a list of all bars using the DOM class selector.
+        const arrayOfBarElements = document.getElementsByClassName('bar');
+
         // Iterate over the array of animations, coloring the elements at the first two
         for (let i = 0; i < lengthOfAnimations; i++) {
-            // Access a list of all bars using the DOM class selector.
-            const arrayOfBarElements = document.getElementsByClassName('bar');
+            
 
             // Since the first two elements in a triplet, color should not change on the third element,
             // represented here by i modulo 3 having no value (remainder).
@@ -127,25 +127,37 @@ function Sorter() {
 
     function handleQuickSort() {
         // Generate the array of animations.
-        const quickSortAnimations = createQuickSortAnimations(sortingArray);
+        const quickSortAnimations = createQuickSortAnimations([...sortingArray]);
         const lengthOfAnimations = quickSortAnimations.length;
+
+        // Access a list of all bars using the DOM class selector.
+        const arrayOfBarElements = document.getElementsByClassName('bar');
 
         // Iterate over the list of animations.
         for (let i = 0; i < lengthOfAnimations; i++) {
-            // Access a list of all bars using the DOM class selector.
-            const arrayOfBarElements = document.getElementsByClassName('bar');
-
             const [leftBarIndex, rightBarIndex] = quickSortAnimations[i];
 
+            // Grab the CSS style object in order to set the backgroundColor.
             const leftBarStyle = arrayOfBarElements[leftBarIndex].style;
             const rightBarStyle = arrayOfBarElements[rightBarIndex].style;
 
-            const barColor = i % 2 === 0 ? SECOND_BAR_COLOR : DEFAULT_BAR_COLOR;
+            // Change the color to indicate swap
+            leftBarStyle.backgroundColor = SECOND_BAR_COLOR;
+            rightBarStyle.backgroundColor = SECOND_BAR_COLOR;
 
             setTimeout(() => {
-                leftBarStyle.backgroundColor = barColor;
-                rightBarStyle.backgroundColor = barColor;
+                // Carry out swap
+                let temp = leftBarStyle.height;
+                leftBarStyle.height = rightBarStyle.height;
+                rightBarStyle.height = temp;
+
+                // Revert colors post-swap.
+                leftBarStyle.backgroundColor = DEFAULT_BAR_COLOR;
+                rightBarStyle.backgroundColor = DEFAULT_BAR_COLOR;
+
             }, i * SORTING_SPEED);
+
+
         }
 
         // Once the animation is finished executing, change the state of 
@@ -178,7 +190,7 @@ function Sorter() {
                        type="range"
                        disabled={currentlySorting}
                        defaultValue={numberOfBars}
-                       min="10"
+                       min="5"
                        max="100" />
                 <div className="sortInputContainer">
                     <form>
